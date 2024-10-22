@@ -1,0 +1,19 @@
+{
+  "moduleName": "simply_queue",
+  "tables": [],
+  "installedModules": [
+    {
+      "module": "serverpod",
+      "version": "20240516151843329"
+    },
+    {
+      "module": "serverpod_auth",
+      "version": "20240520102713718"
+    },
+    {
+      "module": "simply_queue",
+      "version": "20241016225732981"
+    }
+  ],
+  "migrationApiVersion": 1
+}
