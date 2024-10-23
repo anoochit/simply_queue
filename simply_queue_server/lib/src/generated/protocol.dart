@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_library_name
+
 /* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
 /*   To generate run: "serverpod generate"    */
 
@@ -7,8 +9,9 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 
-library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixes
+library protocol;
 
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;

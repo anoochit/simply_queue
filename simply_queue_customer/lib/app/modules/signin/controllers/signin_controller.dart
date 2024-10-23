@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-import 'package:serverpod_auth_client/module.dart';
+import 'package:serverpod_auth_client/serverpod_auth_client.dart';
 import 'package:serverpod_auth_email_flutter/serverpod_auth_email_flutter.dart';
 
-import 'package:simply_queue_signage/serverpod.dart';
+import '../../../../serverpod.dart';
 
 class SigninController extends GetxController {
   TextEditingController emailController = TextEditingController();

@@ -8,14 +8,16 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.5
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  get: 4.6.6
+  serverpod_auth_client: 2.1.5
   serverpod_auth_email_flutter: 2.1.5
   serverpod_auth_shared_flutter: 2.1.5
   serverpod_flutter: 2.1.5
   simply_queue_client:
     path: ../simply_queue_client
-  get: 4.6.6
-  flutter:
-    sdk: flutter
 
 dev_dependencies:
   flutter_lints: ">=3.0.0 <6.0.0"
