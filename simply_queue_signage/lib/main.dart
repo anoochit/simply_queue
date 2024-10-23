@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:simply_queue_signage/serverpod.dart';
@@ -9,10 +10,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initServerPodClient();
   runApp(
-    GetMaterialApp(
-      title: "Signage",
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
+    Shortcuts(
+      shortcuts: {
+        LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
+      },
+      child: GetMaterialApp(
+        title: "Signage",
+        initialRoute: AppPages.INITIAL,
+        getPages: AppPages.routes,
+      ),
     ),
   );
 }
