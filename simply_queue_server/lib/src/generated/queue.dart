@@ -19,6 +19,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
   Queue._({
     this.id,
     required this.number,
+    required this.userInfoId,
     this.userInfo,
     required this.storeId,
     this.store,
@@ -31,6 +32,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
   factory Queue({
     int? id,
     required int number,
+    required int userInfoId,
     _i3.UserInfo? userInfo,
     required int storeId,
     _i2.Store? store,
@@ -43,6 +45,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
     return Queue(
       id: jsonSerialization['id'] as int?,
       number: jsonSerialization['number'] as int,
+      userInfoId: jsonSerialization['userInfoId'] as int,
       userInfo: jsonSerialization['userInfo'] == null
           ? null
           : _i3.UserInfo.fromJson(
@@ -69,6 +72,8 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
 
   int number;
 
+  int userInfoId;
+
   _i3.UserInfo? userInfo;
 
   int storeId;
@@ -87,6 +92,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
   Queue copyWith({
     int? id,
     int? number,
+    int? userInfoId,
     _i3.UserInfo? userInfo,
     int? storeId,
     _i2.Store? store,
@@ -99,6 +105,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
     return {
       if (id != null) 'id': id,
       'number': number,
+      'userInfoId': userInfoId,
       if (userInfo != null) 'userInfo': userInfo?.toJson(),
       'storeId': storeId,
       if (store != null) 'store': store?.toJson(),
@@ -113,6 +120,7 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
     return {
       if (id != null) 'id': id,
       'number': number,
+      'userInfoId': userInfoId,
       if (userInfo != null) 'userInfo': userInfo?.toJsonForProtocol(),
       'storeId': storeId,
       if (store != null) 'store': store?.toJsonForProtocol(),
@@ -122,8 +130,14 @@ abstract class Queue implements _i1.TableRow, _i1.ProtocolSerialization {
     };
   }
 
-  static QueueInclude include({_i2.StoreInclude? store}) {
-    return QueueInclude._(store: store);
+  static QueueInclude include({
+    _i3.UserInfoInclude? userInfo,
+    _i2.StoreInclude? store,
+  }) {
+    return QueueInclude._(
+      userInfo: userInfo,
+      store: store,
+    );
   }
 
   static QueueIncludeList includeList({
@@ -158,6 +172,7 @@ class _QueueImpl extends Queue {
   _QueueImpl({
     int? id,
     required int number,
+    required int userInfoId,
     _i3.UserInfo? userInfo,
     required int storeId,
     _i2.Store? store,
@@ -167,6 +182,7 @@ class _QueueImpl extends Queue {
   }) : super._(
           id: id,
           number: number,
+          userInfoId: userInfoId,
           userInfo: userInfo,
           storeId: storeId,
           store: store,
@@ -179,6 +195,7 @@ class _QueueImpl extends Queue {
   Queue copyWith({
     Object? id = _Undefined,
     int? number,
+    int? userInfoId,
     Object? userInfo = _Undefined,
     int? storeId,
     Object? store = _Undefined,
@@ -189,6 +206,7 @@ class _QueueImpl extends Queue {
     return Queue(
       id: id is int? ? id : this.id,
       number: number ?? this.number,
+      userInfoId: userInfoId ?? this.userInfoId,
       userInfo:
           userInfo is _i3.UserInfo? ? userInfo : this.userInfo?.copyWith(),
       storeId: storeId ?? this.storeId,
@@ -206,8 +224,8 @@ class QueueTable extends _i1.Table {
       'number',
       this,
     );
-    userInfo = _i1.ColumnSerializable(
-      'userInfo',
+    userInfoId = _i1.ColumnInt(
+      'userInfoId',
       this,
     );
     storeId = _i1.ColumnInt(
@@ -233,7 +251,9 @@ class QueueTable extends _i1.Table {
 
   late final _i1.ColumnInt number;
 
-  late final _i1.ColumnSerializable userInfo;
+  late final _i1.ColumnInt userInfoId;
+
+  _i3.UserInfoTable? _userInfo;
 
   late final _i1.ColumnInt storeId;
 
@@ -244,6 +264,19 @@ class QueueTable extends _i1.Table {
   late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnDateTime updatedAt;
+
+  _i3.UserInfoTable get userInfo {
+    if (_userInfo != null) return _userInfo!;
+    _userInfo = _i1.createRelationTable(
+      relationFieldName: 'userInfo',
+      field: Queue.t.userInfoId,
+      foreignField: _i3.UserInfo.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i3.UserInfoTable(tableRelation: foreignTableRelation),
+    );
+    return _userInfo!;
+  }
 
   _i2.StoreTable get store {
     if (_store != null) return _store!;
@@ -262,7 +295,7 @@ class QueueTable extends _i1.Table {
   List<_i1.Column> get columns => [
         id,
         number,
-        userInfo,
+        userInfoId,
         storeId,
         status,
         createdAt,
@@ -271,6 +304,9 @@ class QueueTable extends _i1.Table {
 
   @override
   _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'userInfo') {
+      return userInfo;
+    }
     if (relationField == 'store') {
       return store;
     }
@@ -279,14 +315,23 @@ class QueueTable extends _i1.Table {
 }
 
 class QueueInclude extends _i1.IncludeObject {
-  QueueInclude._({_i2.StoreInclude? store}) {
+  QueueInclude._({
+    _i3.UserInfoInclude? userInfo,
+    _i2.StoreInclude? store,
+  }) {
+    _userInfo = userInfo;
     _store = store;
   }
+
+  _i3.UserInfoInclude? _userInfo;
 
   _i2.StoreInclude? _store;
 
   @override
-  Map<String, _i1.Include?> get includes => {'store': _store};
+  Map<String, _i1.Include?> get includes => {
+        'userInfo': _userInfo,
+        'store': _store,
+      };
 
   @override
   _i1.Table get table => Queue.t;
@@ -471,6 +516,27 @@ class QueueRepository {
 
 class QueueAttachRowRepository {
   const QueueAttachRowRepository._();
+
+  Future<void> userInfo(
+    _i1.Session session,
+    Queue queue,
+    _i3.UserInfo userInfo, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (queue.id == null) {
+      throw ArgumentError.notNull('queue.id');
+    }
+    if (userInfo.id == null) {
+      throw ArgumentError.notNull('userInfo.id');
+    }
+
+    var $queue = queue.copyWith(userInfoId: userInfo.id);
+    await session.db.updateRow<Queue>(
+      $queue,
+      columns: [Queue.t.userInfoId],
+      transaction: transaction ?? session.transaction,
+    );
+  }
 
   Future<void> store(
     _i1.Session session,

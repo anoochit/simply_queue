@@ -12,7 +12,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i2;
+import 'protocol.dart' as _i3;
 
 abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
   Store._({
@@ -21,6 +22,8 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
     required this.description,
     required this.image,
     int? currentQueue,
+    required this.userInfoId,
+    this.userInfo,
     this.queues,
     required this.createdAt,
     DateTime? updatedAt,
@@ -33,7 +36,9 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
     required String description,
     required String image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    required int userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) = _StoreImpl;
@@ -45,8 +50,13 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
       description: jsonSerialization['description'] as String,
       image: jsonSerialization['image'] as String,
       currentQueue: jsonSerialization['currentQueue'] as int,
+      userInfoId: jsonSerialization['userInfoId'] as int,
+      userInfo: jsonSerialization['userInfo'] == null
+          ? null
+          : _i2.UserInfo.fromJson(
+              (jsonSerialization['userInfo'] as Map<String, dynamic>)),
       queues: (jsonSerialization['queues'] as List?)
-          ?.map((e) => _i2.Queue.fromJson((e as Map<String, dynamic>)))
+          ?.map((e) => _i3.Queue.fromJson((e as Map<String, dynamic>)))
           .toList(),
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
@@ -70,7 +80,11 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
 
   int currentQueue;
 
-  List<_i2.Queue>? queues;
+  int userInfoId;
+
+  _i2.UserInfo? userInfo;
+
+  List<_i3.Queue>? queues;
 
   DateTime createdAt;
 
@@ -85,7 +99,9 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
     String? description,
     String? image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    int? userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -97,6 +113,8 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
       'description': description,
       'image': image,
       'currentQueue': currentQueue,
+      'userInfoId': userInfoId,
+      if (userInfo != null) 'userInfo': userInfo?.toJson(),
       if (queues != null)
         'queues': queues?.toJson(valueToJson: (v) => v.toJson()),
       'createdAt': createdAt.toJson(),
@@ -112,6 +130,8 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
       'description': description,
       'image': image,
       'currentQueue': currentQueue,
+      'userInfoId': userInfoId,
+      if (userInfo != null) 'userInfo': userInfo?.toJsonForProtocol(),
       if (queues != null)
         'queues': queues?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
       'createdAt': createdAt.toJson(),
@@ -119,8 +139,14 @@ abstract class Store implements _i1.TableRow, _i1.ProtocolSerialization {
     };
   }
 
-  static StoreInclude include({_i2.QueueIncludeList? queues}) {
-    return StoreInclude._(queues: queues);
+  static StoreInclude include({
+    _i2.UserInfoInclude? userInfo,
+    _i3.QueueIncludeList? queues,
+  }) {
+    return StoreInclude._(
+      userInfo: userInfo,
+      queues: queues,
+    );
   }
 
   static StoreIncludeList includeList({
@@ -158,7 +184,9 @@ class _StoreImpl extends Store {
     required String description,
     required String image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    required int userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
@@ -167,6 +195,8 @@ class _StoreImpl extends Store {
           description: description,
           image: image,
           currentQueue: currentQueue,
+          userInfoId: userInfoId,
+          userInfo: userInfo,
           queues: queues,
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -179,6 +209,8 @@ class _StoreImpl extends Store {
     String? description,
     String? image,
     int? currentQueue,
+    int? userInfoId,
+    Object? userInfo = _Undefined,
     Object? queues = _Undefined,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -189,7 +221,10 @@ class _StoreImpl extends Store {
       description: description ?? this.description,
       image: image ?? this.image,
       currentQueue: currentQueue ?? this.currentQueue,
-      queues: queues is List<_i2.Queue>?
+      userInfoId: userInfoId ?? this.userInfoId,
+      userInfo:
+          userInfo is _i2.UserInfo? ? userInfo : this.userInfo?.copyWith(),
+      queues: queues is List<_i3.Queue>?
           ? queues
           : this.queues?.map((e0) => e0.copyWith()).toList(),
       createdAt: createdAt ?? this.createdAt,
@@ -217,6 +252,10 @@ class StoreTable extends _i1.Table {
       this,
       hasDefault: true,
     );
+    userInfoId = _i1.ColumnInt(
+      'userInfoId',
+      this,
+    );
     createdAt = _i1.ColumnDateTime(
       'createdAt',
       this,
@@ -236,40 +275,57 @@ class StoreTable extends _i1.Table {
 
   late final _i1.ColumnInt currentQueue;
 
-  _i2.QueueTable? ___queues;
+  late final _i1.ColumnInt userInfoId;
 
-  _i1.ManyRelation<_i2.QueueTable>? _queues;
+  _i2.UserInfoTable? _userInfo;
+
+  _i3.QueueTable? ___queues;
+
+  _i1.ManyRelation<_i3.QueueTable>? _queues;
 
   late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnDateTime updatedAt;
 
-  _i2.QueueTable get __queues {
+  _i2.UserInfoTable get userInfo {
+    if (_userInfo != null) return _userInfo!;
+    _userInfo = _i1.createRelationTable(
+      relationFieldName: 'userInfo',
+      field: Store.t.userInfoId,
+      foreignField: _i2.UserInfo.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.UserInfoTable(tableRelation: foreignTableRelation),
+    );
+    return _userInfo!;
+  }
+
+  _i3.QueueTable get __queues {
     if (___queues != null) return ___queues!;
     ___queues = _i1.createRelationTable(
       relationFieldName: '__queues',
       field: Store.t.id,
-      foreignField: _i2.Queue.t.storeId,
+      foreignField: _i3.Queue.t.storeId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.QueueTable(tableRelation: foreignTableRelation),
+          _i3.QueueTable(tableRelation: foreignTableRelation),
     );
     return ___queues!;
   }
 
-  _i1.ManyRelation<_i2.QueueTable> get queues {
+  _i1.ManyRelation<_i3.QueueTable> get queues {
     if (_queues != null) return _queues!;
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'queues',
       field: Store.t.id,
-      foreignField: _i2.Queue.t.storeId,
+      foreignField: _i3.Queue.t.storeId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.QueueTable(tableRelation: foreignTableRelation),
+          _i3.QueueTable(tableRelation: foreignTableRelation),
     );
-    _queues = _i1.ManyRelation<_i2.QueueTable>(
+    _queues = _i1.ManyRelation<_i3.QueueTable>(
       tableWithRelations: relationTable,
-      table: _i2.QueueTable(
+      table: _i3.QueueTable(
           tableRelation: relationTable.tableRelation!.lastRelation),
     );
     return _queues!;
@@ -282,12 +338,16 @@ class StoreTable extends _i1.Table {
         description,
         image,
         currentQueue,
+        userInfoId,
         createdAt,
         updatedAt,
       ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'userInfo') {
+      return userInfo;
+    }
     if (relationField == 'queues') {
       return __queues;
     }
@@ -296,14 +356,23 @@ class StoreTable extends _i1.Table {
 }
 
 class StoreInclude extends _i1.IncludeObject {
-  StoreInclude._({_i2.QueueIncludeList? queues}) {
+  StoreInclude._({
+    _i2.UserInfoInclude? userInfo,
+    _i3.QueueIncludeList? queues,
+  }) {
+    _userInfo = userInfo;
     _queues = queues;
   }
 
-  _i2.QueueIncludeList? _queues;
+  _i2.UserInfoInclude? _userInfo;
+
+  _i3.QueueIncludeList? _queues;
 
   @override
-  Map<String, _i1.Include?> get includes => {'queues': _queues};
+  Map<String, _i1.Include?> get includes => {
+        'userInfo': _userInfo,
+        'queues': _queues,
+      };
 
   @override
   _i1.Table get table => Store.t;
@@ -494,7 +563,7 @@ class StoreAttachRepository {
   Future<void> queues(
     _i1.Session session,
     Store store,
-    List<_i2.Queue> queue, {
+    List<_i3.Queue> queue, {
     _i1.Transaction? transaction,
   }) async {
     if (queue.any((e) => e.id == null)) {
@@ -505,9 +574,9 @@ class StoreAttachRepository {
     }
 
     var $queue = queue.map((e) => e.copyWith(storeId: store.id)).toList();
-    await session.db.update<_i2.Queue>(
+    await session.db.update<_i3.Queue>(
       $queue,
-      columns: [_i2.Queue.t.storeId],
+      columns: [_i3.Queue.t.storeId],
       transaction: transaction ?? session.transaction,
     );
   }
@@ -516,10 +585,31 @@ class StoreAttachRepository {
 class StoreAttachRowRepository {
   const StoreAttachRowRepository._();
 
+  Future<void> userInfo(
+    _i1.Session session,
+    Store store,
+    _i2.UserInfo userInfo, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (store.id == null) {
+      throw ArgumentError.notNull('store.id');
+    }
+    if (userInfo.id == null) {
+      throw ArgumentError.notNull('userInfo.id');
+    }
+
+    var $store = store.copyWith(userInfoId: userInfo.id);
+    await session.db.updateRow<Store>(
+      $store,
+      columns: [Store.t.userInfoId],
+      transaction: transaction ?? session.transaction,
+    );
+  }
+
   Future<void> queues(
     _i1.Session session,
     Store store,
-    _i2.Queue queue, {
+    _i3.Queue queue, {
     _i1.Transaction? transaction,
   }) async {
     if (queue.id == null) {
@@ -530,9 +620,9 @@ class StoreAttachRowRepository {
     }
 
     var $queue = queue.copyWith(storeId: store.id);
-    await session.db.updateRow<_i2.Queue>(
+    await session.db.updateRow<_i3.Queue>(
       $queue,
-      columns: [_i2.Queue.t.storeId],
+      columns: [_i3.Queue.t.storeId],
       transaction: transaction ?? session.transaction,
     );
   }

@@ -67,8 +67,8 @@ void run(List<String> args) async {
   // Start the server.
   await pod.start();
 
-  // init sample data
-  await initSampleData(pod);
+  // init sample data after database migration
+  // await initSampleData(pod);
 }
 
 Future<bool> sendMail(
@@ -99,6 +99,7 @@ Future<bool> sendMail(
 
 Future<void> initSampleData(Serverpod pod) async {
   final session = await pod.createSession();
+  int storeId = 2;
 
   // add sample user
   final totalUser = await auth.UserInfo.db.count(session);
@@ -146,6 +147,7 @@ Future<void> initSampleData(Serverpod pod) async {
       image: 'https://picsum.photos/536/354',
       createdAt: DateTime.now(),
       currentQueue: 0,
+      userInfoId: storeId,
     );
 
     await Store.db.insertRow(session, store);

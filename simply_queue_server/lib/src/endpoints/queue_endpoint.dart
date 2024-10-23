@@ -18,15 +18,27 @@ class QueueEndpoint extends Endpoint {
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
 
-  // create queue
+  @override
+  bool get requireLogin => true;
+
+  // TODO : create queue
   Future<Queue> createQueue(Session session, int storeId) async {
+    final user = await session.authenticated;
+
     // calculate queue
 
     // create queue
-    final row = Queue(number: 1, storeId: storeId, createdAt: DateTime.now());
+    final row = Queue(
+        number: 1,
+        storeId: storeId,
+        userInfoId: user!.userId,
+        createdAt: DateTime.now());
+
     final queue = await Queue.db.insertRow(session, row);
 
-    // create stream
+    // post message to central message stream
+    session.messages.postMessage('store_${storeId}', queue);
+
     return queue;
   }
 

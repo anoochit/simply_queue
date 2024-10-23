@@ -13,6 +13,7 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         centerTitle: true,
       ),
+      // TODO : show current queue, waiting list, move or cancel quere and reset queue
       body: Container(),
     );
   }

@@ -10,7 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i2;
+import 'protocol.dart' as _i3;
 
 abstract class Store implements _i1.SerializableModel {
   Store._({
@@ -19,6 +20,8 @@ abstract class Store implements _i1.SerializableModel {
     required this.description,
     required this.image,
     int? currentQueue,
+    required this.userInfoId,
+    this.userInfo,
     this.queues,
     required this.createdAt,
     DateTime? updatedAt,
@@ -31,7 +34,9 @@ abstract class Store implements _i1.SerializableModel {
     required String description,
     required String image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    required int userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) = _StoreImpl;
@@ -43,8 +48,13 @@ abstract class Store implements _i1.SerializableModel {
       description: jsonSerialization['description'] as String,
       image: jsonSerialization['image'] as String,
       currentQueue: jsonSerialization['currentQueue'] as int,
+      userInfoId: jsonSerialization['userInfoId'] as int,
+      userInfo: jsonSerialization['userInfo'] == null
+          ? null
+          : _i2.UserInfo.fromJson(
+              (jsonSerialization['userInfo'] as Map<String, dynamic>)),
       queues: (jsonSerialization['queues'] as List?)
-          ?.map((e) => _i2.Queue.fromJson((e as Map<String, dynamic>)))
+          ?.map((e) => _i3.Queue.fromJson((e as Map<String, dynamic>)))
           .toList(),
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
@@ -66,7 +76,11 @@ abstract class Store implements _i1.SerializableModel {
 
   int currentQueue;
 
-  List<_i2.Queue>? queues;
+  int userInfoId;
+
+  _i2.UserInfo? userInfo;
+
+  List<_i3.Queue>? queues;
 
   DateTime createdAt;
 
@@ -78,7 +92,9 @@ abstract class Store implements _i1.SerializableModel {
     String? description,
     String? image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    int? userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -90,6 +106,8 @@ abstract class Store implements _i1.SerializableModel {
       'description': description,
       'image': image,
       'currentQueue': currentQueue,
+      'userInfoId': userInfoId,
+      if (userInfo != null) 'userInfo': userInfo?.toJson(),
       if (queues != null)
         'queues': queues?.toJson(valueToJson: (v) => v.toJson()),
       'createdAt': createdAt.toJson(),
@@ -112,7 +130,9 @@ class _StoreImpl extends Store {
     required String description,
     required String image,
     int? currentQueue,
-    List<_i2.Queue>? queues,
+    required int userInfoId,
+    _i2.UserInfo? userInfo,
+    List<_i3.Queue>? queues,
     required DateTime createdAt,
     DateTime? updatedAt,
   }) : super._(
@@ -121,6 +141,8 @@ class _StoreImpl extends Store {
           description: description,
           image: image,
           currentQueue: currentQueue,
+          userInfoId: userInfoId,
+          userInfo: userInfo,
           queues: queues,
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -133,6 +155,8 @@ class _StoreImpl extends Store {
     String? description,
     String? image,
     int? currentQueue,
+    int? userInfoId,
+    Object? userInfo = _Undefined,
     Object? queues = _Undefined,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -143,7 +167,10 @@ class _StoreImpl extends Store {
       description: description ?? this.description,
       image: image ?? this.image,
       currentQueue: currentQueue ?? this.currentQueue,
-      queues: queues is List<_i2.Queue>?
+      userInfoId: userInfoId ?? this.userInfoId,
+      userInfo:
+          userInfo is _i2.UserInfo? ? userInfo : this.userInfo?.copyWith(),
+      queues: queues is List<_i3.Queue>?
           ? queues
           : this.queues?.map((e0) => e0.copyWith()).toList(),
       createdAt: createdAt ?? this.createdAt,

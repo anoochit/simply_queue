@@ -15,7 +15,7 @@ class HomeView extends GetView<HomeController> {
       child: Flex(
         direction: Axis.horizontal,
         children: [
-          // current queue
+          // TODO : current queue
           Flexible(
             flex: 2,
             child: Center(
@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
             thickness: 2.0,
           ),
 
-          // waiting list
+          // TODO : waiting list
           Flexible(
             flex: 1,
             child: Column(

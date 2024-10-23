@@ -20,7 +20,7 @@ table: queue
 # Eg. `List<int>?` or `List<MyOtherClass?>`.
 fields:
   number: int
-  userInfo: module:auth:UserInfo?
+  userInfo: module:auth:UserInfo?, relation(onUpdate=SetNull, onDelete=SetNull)
   store: Store?, relation(name=store_queue)
   status: Status, default=wait
   createdAt: DateTime

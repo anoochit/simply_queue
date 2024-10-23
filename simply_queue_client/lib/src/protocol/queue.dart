@@ -17,6 +17,7 @@ abstract class Queue implements _i1.SerializableModel {
   Queue._({
     this.id,
     required this.number,
+    required this.userInfoId,
     this.userInfo,
     required this.storeId,
     this.store,
@@ -29,6 +30,7 @@ abstract class Queue implements _i1.SerializableModel {
   factory Queue({
     int? id,
     required int number,
+    required int userInfoId,
     _i3.UserInfo? userInfo,
     required int storeId,
     _i2.Store? store,
@@ -41,6 +43,7 @@ abstract class Queue implements _i1.SerializableModel {
     return Queue(
       id: jsonSerialization['id'] as int?,
       number: jsonSerialization['number'] as int,
+      userInfoId: jsonSerialization['userInfoId'] as int,
       userInfo: jsonSerialization['userInfo'] == null
           ? null
           : _i3.UserInfo.fromJson(
@@ -65,6 +68,8 @@ abstract class Queue implements _i1.SerializableModel {
 
   int number;
 
+  int userInfoId;
+
   _i3.UserInfo? userInfo;
 
   int storeId;
@@ -80,6 +85,7 @@ abstract class Queue implements _i1.SerializableModel {
   Queue copyWith({
     int? id,
     int? number,
+    int? userInfoId,
     _i3.UserInfo? userInfo,
     int? storeId,
     _i2.Store? store,
@@ -92,6 +98,7 @@ abstract class Queue implements _i1.SerializableModel {
     return {
       if (id != null) 'id': id,
       'number': number,
+      'userInfoId': userInfoId,
       if (userInfo != null) 'userInfo': userInfo?.toJson(),
       'storeId': storeId,
       if (store != null) 'store': store?.toJson(),
@@ -113,6 +120,7 @@ class _QueueImpl extends Queue {
   _QueueImpl({
     int? id,
     required int number,
+    required int userInfoId,
     _i3.UserInfo? userInfo,
     required int storeId,
     _i2.Store? store,
@@ -122,6 +130,7 @@ class _QueueImpl extends Queue {
   }) : super._(
           id: id,
           number: number,
+          userInfoId: userInfoId,
           userInfo: userInfo,
           storeId: storeId,
           store: store,
@@ -134,6 +143,7 @@ class _QueueImpl extends Queue {
   Queue copyWith({
     Object? id = _Undefined,
     int? number,
+    int? userInfoId,
     Object? userInfo = _Undefined,
     int? storeId,
     Object? store = _Undefined,
@@ -144,6 +154,7 @@ class _QueueImpl extends Queue {
     return Queue(
       id: id is int? ? id : this.id,
       number: number ?? this.number,
+      userInfoId: userInfoId ?? this.userInfoId,
       userInfo:
           userInfo is _i3.UserInfo? ? userInfo : this.userInfo?.copyWith(),
       storeId: storeId ?? this.storeId,

@@ -23,6 +23,7 @@ fields:
   description: String
   image: String
   currentQueue: int, default=0
+  userInfo: module:auth:UserInfo?, relation(onUpdate=SetNull, onDelete=SetNull)
   queues: List<Queue>?, relation(name=store_queue)
   createdAt: DateTime
   updatedAt: DateTime, default=now

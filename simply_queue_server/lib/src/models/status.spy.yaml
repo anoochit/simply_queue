@@ -1,5 +1,5 @@
 enum: Status
 serialized: byName
 values:
-  - done 
+  - done
   - wait 

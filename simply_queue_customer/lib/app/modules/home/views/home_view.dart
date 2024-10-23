@@ -27,7 +27,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  // current queue
+  // TODO : current queue
   Widget listQueue() {
     return Container();
   }
