@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import 'package:simply_queue_signage/app/middlewares/route_guard.dart';
 
 import '../modules/home/bindings/home_binding.dart';

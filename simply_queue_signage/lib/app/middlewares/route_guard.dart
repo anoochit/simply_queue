@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
+
 import 'package:simply_queue_signage/serverpod.dart';
 
 import '../routes/app_pages.dart';
