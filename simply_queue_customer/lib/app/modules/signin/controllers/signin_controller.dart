@@ -17,7 +17,7 @@ class SigninController extends GetxController {
     super.onInit();
 
     if (kDebugMode) {
-      emailController.text = 'store@example.com';
+      emailController.text = 'customer@example.com';
       passwordController.text = 'Hello123!';
     }
   }
