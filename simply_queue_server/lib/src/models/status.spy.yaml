@@ -1,0 +1,5 @@
+enum: Status
+serialized: byName
+values:
+  - done 
+  - wait 
