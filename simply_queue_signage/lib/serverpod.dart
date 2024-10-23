@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:simply_queue_client/simply_queue_client.dart';
+import 'package:simply_queue_signage/app/routes/app_pages.dart';
 
 // Sets up a singleton client object that can be used to talk to the server from
 // anywhere in our app. The client is generated from your server code.
@@ -36,6 +38,7 @@ Future<void> initServerPodClient() async {
       log('user already signed in ');
     } else {
       log('user signed out ');
+      Get.offAllNamed(Routes.SIGNIN);
     }
   });
 

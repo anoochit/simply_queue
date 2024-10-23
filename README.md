@@ -11,5 +11,6 @@ A universal queue management system.
 
  ## Screenshots
 
- ![](/screenshots/signage01.png)
- 
+![](/screenshots/signage01.png)
+
+![](/screenshots/signage02.png)

@@ -37,7 +37,8 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     '$queuePrefix${1}',
                     style: Theme.of(context).textTheme.displayLarge!.apply(
-                          fontSizeFactor: 4.0,
+                          fontWeightDelta: 3,
+                          fontSizeFactor: 3.8,
                           color: Colors.green.shade600,
                         ),
                   ),
@@ -61,10 +62,9 @@ class HomeView extends GetView<HomeController> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(
                     'Waiting List',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineSmall!
-                        .apply(color: Colors.grey.shade800),
+                    style: Theme.of(context).textTheme.headlineSmall!.apply(
+                          color: Colors.grey.shade800,
+                        ),
                   ),
                 ),
 
@@ -78,7 +78,8 @@ class HomeView extends GetView<HomeController> {
                           '$queuePrefix${index + 2}',
                           style:
                               Theme.of(context).textTheme.displayLarge!.apply(
-                                    color: Colors.grey.shade400,
+                                    color: Colors.grey.shade500,
+                                    fontWeightDelta: 3,
                                   ),
                         ),
                       );
