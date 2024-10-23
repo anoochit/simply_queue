@@ -11,9 +11,13 @@ Future<void> main() async {
 
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Store",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: ThemeData(
+        colorSchemeSeed: Colors.blueGrey,
+      ),
     ),
   );
 }

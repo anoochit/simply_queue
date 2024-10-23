@@ -10,9 +10,13 @@ Future<void> main() async {
   await initServerPodClient();
   runApp(
     GetMaterialApp(
-      title: "Application",
+      debugShowCheckedModeBanner: false,
+      title: "Customer",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      theme: ThemeData(
+        colorSchemeSeed: Colors.amber,
+      ),
     ),
   );
 }
