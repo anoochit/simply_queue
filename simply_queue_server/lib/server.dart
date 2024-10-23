@@ -103,7 +103,7 @@ Future<void> initSampleData(Serverpod pod) async {
   // add sample user
   final totalUser = await auth.UserInfo.db.count(session);
   if (totalUser == 0) {
-    session.log('> No user! add sample user');
+    session.log('No user! add sample user');
 
     await auth.Emails.createUser(
       session,
@@ -116,7 +116,7 @@ Future<void> initSampleData(Serverpod pod) async {
         user!.id!,
         {scope.UserScope.customer},
       );
-      session.log('> Add customer account');
+      session.log('Add customer account');
     });
 
     await auth.Emails.createUser(
@@ -130,14 +130,14 @@ Future<void> initSampleData(Serverpod pod) async {
         user!.id!,
         {scope.UserScope.store},
       );
-      session.log('> Add store account');
+      session.log('Add store account');
     });
   }
 
   // add sample store
   final totalStore = await Store.db.count(session);
   if (totalStore == 0) {
-    session.log('> No store! add sample store');
+    session.log('No store! add sample store');
 
     final store = Store(
       name: 'Sample Store',
