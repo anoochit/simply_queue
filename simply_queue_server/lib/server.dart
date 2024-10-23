@@ -2,12 +2,14 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 import 'package:serverpod/serverpod.dart';
 
-import 'package:simply_queue_server/src/web/routes/root.dart';
-
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 
+import 'src/endpoints/store_endpoint.dart' as scope;
+
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
+
+import 'src/web/routes/root.dart';
 
 // This is the starting point of your Serverpod server. In most cases, you will
 // only need to make additions to this file if you add future calls,  are
@@ -64,6 +66,9 @@ void run(List<String> args) async {
 
   // Start the server.
   await pod.start();
+
+  // init sample data
+  await initSampleData(pod);
 }
 
 Future<bool> sendMail(
@@ -89,5 +94,60 @@ Future<bool> sendMail(
   } catch (_) {
     // Return false if the email could not be sent.
     return false;
+  }
+}
+
+Future<void> initSampleData(Serverpod pod) async {
+  final session = await pod.createSession();
+
+  // add sample user
+  final totalUser = await auth.UserInfo.db.count(session);
+  if (totalUser == 0) {
+    session.log('> No user! add sample user');
+
+    await auth.Emails.createUser(
+      session,
+      'customer',
+      'customer@example.com',
+      'Hello123!',
+    ).then((user) async {
+      await auth.Users.updateUserScopes(
+        session,
+        user!.id!,
+        {scope.UserScope.customer},
+      );
+      session.log('> Add customer account');
+    });
+
+    await auth.Emails.createUser(
+      session,
+      'store',
+      'store@example.com',
+      'Hello123!',
+    ).then((user) async {
+      await auth.Users.updateUserScopes(
+        session,
+        user!.id!,
+        {scope.UserScope.store},
+      );
+      session.log('> Add store account');
+    });
+  }
+
+  // add sample store
+  final totalStore = await Store.db.count(session);
+  if (totalStore == 0) {
+    session.log('> No store! add sample store');
+
+    final store = Store(
+      name: 'Sample Store',
+      description:
+          'Do commodo ullamco Lorem veniam est cupidatat quis amet sint.',
+      image: 'https://picsum.photos/536/354',
+      createdAt: DateTime.now(),
+      currentQueue: 0,
+    );
+
+    await Store.db.insertRow(session, store);
   }
 }

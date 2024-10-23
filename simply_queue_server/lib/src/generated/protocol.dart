@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_library_name
-
 /* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
 /*   To generate run: "serverpod generate"    */
 
@@ -9,9 +7,8 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
-// ignore_for_file: no_leading_underscores_for_library_prefixes
 
-library protocol;
+library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
@@ -20,12 +17,14 @@ import 'example.dart' as _i4;
 import 'queue.dart' as _i5;
 import 'status.dart' as _i6;
 import 'store.dart' as _i7;
-import 'protocol.dart' as _i8;
-import 'package:simply_queue_server/src/generated/store.dart' as _i9;
+import 'user_scope.dart' as _i8;
+import 'protocol.dart' as _i9;
+import 'package:simply_queue_server/src/generated/store.dart' as _i10;
 export 'example.dart';
 export 'queue.dart';
 export 'status.dart';
 export 'store.dart';
+export 'user_scope.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -208,6 +207,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i7.Store) {
       return _i7.Store.fromJson(data) as T;
     }
+    if (t == _i8.UserScope) {
+      return _i8.UserScope.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i4.Example?>()) {
       return (data != null ? _i4.Example.fromJson(data) : null) as T;
     }
@@ -220,13 +222,16 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i7.Store?>()) {
       return (data != null ? _i7.Store.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i8.Queue>?>()) {
+    if (t == _i1.getType<_i8.UserScope?>()) {
+      return (data != null ? _i8.UserScope.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<List<_i9.Queue>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i8.Queue>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i9.Queue>(e)).toList()
           : null) as dynamic;
     }
-    if (t == List<_i9.Store>) {
-      return (data as List).map((e) => deserialize<_i9.Store>(e)).toList()
+    if (t == List<_i10.Store>) {
+      return (data as List).map((e) => deserialize<_i10.Store>(e)).toList()
           as dynamic;
     }
     try {
@@ -254,6 +259,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i7.Store) {
       return 'Store';
     }
+    if (data is _i8.UserScope) {
+      return 'UserScope';
+    }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod.$className';
@@ -278,6 +286,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (data['className'] == 'Store') {
       return deserialize<_i7.Store>(data['data']);
+    }
+    if (data['className'] == 'UserScope') {
+      return deserialize<_i8.UserScope>(data['data']);
     }
     if (data['className'].startsWith('serverpod.')) {
       data['className'] = data['className'].substring(10);

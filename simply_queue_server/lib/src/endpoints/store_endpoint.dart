@@ -43,3 +43,11 @@ class StoreEndpoint extends Endpoint {
     return result;
   }
 }
+
+class UserScope extends Scope {
+  const UserScope(String super.name);
+
+  static const admin = UserScope('admin');
+  static const customer = UserScope('customer');
+  static const store = UserScope('store');
+}
