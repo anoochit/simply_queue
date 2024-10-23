@@ -11,7 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/example_endpoint.dart' as _i2;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
+import '../endpoints/queue_endpoint.dart' as _i3;
+import '../endpoints/store_endpoint.dart' as _i4;
+import 'package:simply_queue_server/src/generated/store.dart' as _i5;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i6;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -22,7 +25,19 @@ class Endpoints extends _i1.EndpointDispatch {
           server,
           'example',
           null,
-        )
+        ),
+      'queue': _i3.QueueEndpoint()
+        ..initialize(
+          server,
+          'queue',
+          null,
+        ),
+      'store': _i4.StoreEndpoint()
+        ..initialize(
+          server,
+          'store',
+          null,
+        ),
     };
     connectors['example'] = _i1.EndpointConnector(
       name: 'example',
@@ -48,6 +63,102 @@ class Endpoints extends _i1.EndpointDispatch {
         )
       },
     );
-    modules['serverpod_auth'] = _i3.Endpoints()..initializeEndpoints(server);
+    connectors['queue'] = _i1.EndpointConnector(
+      name: 'queue',
+      endpoint: endpoints['queue']!,
+      methodConnectors: {
+        'createQueue': _i1.MethodConnector(
+          name: 'createQueue',
+          params: {
+            'storeId': _i1.ParameterDescription(
+              name: 'storeId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['queue'] as _i3.QueueEndpoint).createQueue(
+            session,
+            params['storeId'],
+          ),
+        ),
+        'streamQueue': _i1.MethodStreamConnector(
+          name: 'streamQueue',
+          params: {
+            'storeId': _i1.ParameterDescription(
+              name: 'storeId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          streamParams: {},
+          returnType: _i1.MethodStreamReturnType.streamType,
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+            Map<String, Stream> streamParams,
+          ) =>
+              (endpoints['queue'] as _i3.QueueEndpoint).streamQueue(
+            session,
+            params['storeId'],
+          ),
+        ),
+      },
+    );
+    connectors['store'] = _i1.EndpointConnector(
+      name: 'store',
+      endpoint: endpoints['store']!,
+      methodConnectors: {
+        'getStores': _i1.MethodConnector(
+          name: 'getStores',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['store'] as _i4.StoreEndpoint).getStores(session),
+        ),
+        'createStore': _i1.MethodConnector(
+          name: 'createStore',
+          params: {
+            'store': _i1.ParameterDescription(
+              name: 'store',
+              type: _i1.getType<_i5.Store>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['store'] as _i4.StoreEndpoint).createStore(
+            session,
+            params['store'],
+          ),
+        ),
+        'resetQueue': _i1.MethodConnector(
+          name: 'resetQueue',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['store'] as _i4.StoreEndpoint).resetQueue(
+            session,
+            params['id'],
+          ),
+        ),
+      },
+    );
+    modules['serverpod_auth'] = _i6.Endpoints()..initializeEndpoints(server);
   }
 }

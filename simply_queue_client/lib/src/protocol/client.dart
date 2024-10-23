@@ -11,8 +11,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i3;
-import 'protocol.dart' as _i4;
+import 'package:simply_queue_client/src/protocol/queue.dart' as _i3;
+import 'package:simply_queue_client/src/protocol/store.dart' as _i4;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i5;
+import 'protocol.dart' as _i6;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -28,12 +30,64 @@ class EndpointExample extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointQueue extends _i1.EndpointRef {
+  EndpointQueue(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'queue';
+
+  _i2.Future<_i3.Queue> createQueue(int storeId) =>
+      caller.callServerEndpoint<_i3.Queue>(
+        'queue',
+        'createQueue',
+        {'storeId': storeId},
+      );
+
+  _i2.Stream<dynamic> streamQueue(int storeId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<dynamic>, dynamic>(
+        'queue',
+        'streamQueue',
+        {'storeId': storeId},
+        {},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointStore extends _i1.EndpointRef {
+  EndpointStore(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'store';
+
+  _i2.Future<List<_i4.Store>> getStores() =>
+      caller.callServerEndpoint<List<_i4.Store>>(
+        'store',
+        'getStores',
+        {},
+      );
+
+  _i2.Future<_i4.Store> createStore(_i4.Store store) =>
+      caller.callServerEndpoint<_i4.Store>(
+        'store',
+        'createStore',
+        {'store': store},
+      );
+
+  _i2.Future<_i4.Store> resetQueue(int id) =>
+      caller.callServerEndpoint<_i4.Store>(
+        'store',
+        'resetQueue',
+        {'id': id},
+      );
+}
+
 class _Modules {
   _Modules(Client client) {
-    auth = _i3.Caller(client);
+    auth = _i5.Caller(client);
   }
 
-  late final _i3.Caller auth;
+  late final _i5.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -52,7 +106,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i4.Protocol(),
+          _i6.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -63,15 +117,25 @@ class Client extends _i1.ServerpodClientShared {
               disconnectStreamsOnLostInternetConnection,
         ) {
     example = EndpointExample(this);
+    queue = EndpointQueue(this);
+    store = EndpointStore(this);
     modules = _Modules(this);
   }
 
   late final EndpointExample example;
 
+  late final EndpointQueue queue;
+
+  late final EndpointStore store;
+
   late final _Modules modules;
 
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'example': example};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'example': example,
+        'queue': queue,
+        'store': store,
+      };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup =>

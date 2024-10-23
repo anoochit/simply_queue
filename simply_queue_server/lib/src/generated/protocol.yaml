@@ -1,2 +1,9 @@
 example:
   - hello:
+queue:
+  - createQueue:
+  - streamQueue:
+store:
+  - getStores:
+  - createStore:
+  - resetQueue:

@@ -22,7 +22,6 @@ fields:
   name: String
   description: String
   image: String
-  startQueue: int, default=0
   currentQueue: int, default=0
   queues: List<Queue>?, relation(name=store_queue)
   createdAt: DateTime
