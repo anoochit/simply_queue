@@ -15,6 +15,7 @@ Future<void> main() async {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "Signage",
         initialRoute: AppPages.INITIAL,
         getPages: AppPages.routes,
