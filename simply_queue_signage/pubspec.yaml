@@ -2,23 +2,24 @@ name: simply_queue_signage
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment: 
+environment:
   sdk: ^3.5.3
 
-dependencies: 
-  serverpod_flutter: 2.1.5
+dependencies:
   cupertino_icons: ^1.0.8
-  get: 4.6.6
-  flutter: 
+  flutter:
     sdk: flutter
-  simply_queue_client: 
+  get: 4.6.6
+  serverpod_auth_email_flutter: 2.1.5
+  serverpod_auth_shared_flutter: 2.1.5
+  serverpod_flutter: 2.1.5
+  simply_queue_client:
     path: ../simply_queue_client
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^4.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
+flutter:
   uses-material-design: true
-
