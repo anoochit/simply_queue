@@ -16,81 +16,90 @@ class HomeView extends GetView<HomeController> {
         direction: Axis.horizontal,
         children: [
           // TODO : current queue
-          Flexible(
-            flex: 2,
-            child: Center(
-              child: Column(
-                children: [
-                  // label
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text(
-                      'Current Queue',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .apply(color: Colors.grey.shade800),
-                    ),
-                  ),
-                  const Spacer(),
-                  // number
-                  Text(
-                    '$queuePrefix${1}',
-                    style: Theme.of(context).textTheme.displayLarge!.apply(
-                          fontWeightDelta: 3,
-                          fontSizeFactor: 3.8,
-                          color: Colors.green.shade600,
-                        ),
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
-          ),
+          showCurrentQueue(context),
 
           const VerticalDivider(
             thickness: 2.0,
           ),
 
           // TODO : waiting list
-          Flexible(
-            flex: 1,
-            child: Column(
-              children: [
-                // label
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    'Waiting List',
-                    style: Theme.of(context).textTheme.headlineSmall!.apply(
-                          color: Colors.grey.shade800,
-                        ),
-                  ),
-                ),
-
-                // list
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(
-                          '$queuePrefix${index + 2}',
-                          style:
-                              Theme.of(context).textTheme.displayLarge!.apply(
-                                    color: Colors.grey.shade500,
-                                    fontWeightDelta: 3,
-                                  ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          )
+          showWaitingList(context)
         ],
       ),
     ));
+  }
+
+  // waiting list
+  Widget showWaitingList(BuildContext context) {
+    return Flexible(
+      flex: 1,
+      child: Column(
+        children: [
+          // label
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              'Waiting List',
+              style: Theme.of(context).textTheme.headlineSmall!.apply(
+                    color: Colors.grey.shade800,
+                  ),
+            ),
+          ),
+
+          // list
+          Expanded(
+            child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    '$queuePrefix${index + 2}',
+                    style: Theme.of(context).textTheme.displayLarge!.apply(
+                          color: Colors.grey.shade500,
+                          fontWeightDelta: 3,
+                        ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // current queue
+  Widget showCurrentQueue(BuildContext context) {
+    return Flexible(
+      flex: 2,
+      child: Center(
+        child: Column(
+          children: [
+            // label
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                'Current Queue',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall!
+                    .apply(color: Colors.grey.shade800),
+              ),
+            ),
+            const Spacer(),
+            // number
+            Text(
+              '$queuePrefix${1}',
+              style: Theme.of(context).textTheme.displayLarge!.apply(
+                    fontWeightDelta: 3,
+                    fontSizeFactor: 4.0,
+                    color: Colors.green.shade600,
+                  ),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+    );
   }
 }
