@@ -12,15 +12,21 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 enum Status implements _i1.SerializableModel {
-  done,
-  wait;
+  current,
+  wait,
+  reject,
+  cancel;
 
   static Status fromJson(String name) {
     switch (name) {
-      case 'done':
-        return done;
+      case 'current':
+        return current;
       case 'wait':
         return wait;
+      case 'reject':
+        return reject;
+      case 'cancel':
+        return cancel;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "Status"');
     }

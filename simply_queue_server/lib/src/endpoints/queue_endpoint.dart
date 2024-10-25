@@ -23,27 +23,77 @@ class QueueEndpoint extends Endpoint {
 
   // TODO : create queue
   Future<Queue> createQueue(Session session, int storeId) async {
+    late Queue row;
+    late int queueNumber;
     final user = await session.authenticated;
 
-    // calculate queue
+    // check current queue and get latest queue
+    final store = await Store.db.findById(
+      session,
+      storeId,
+      include: Store.include(
+        queues: Queue.includeList(
+          orderBy: (p) => p.number,
+          orderDescending: true,
+        ),
+      ),
+    );
 
-    // create queue
-    final row = Queue(
+    final storeCurrentQueue = store!.currentQueue;
+
+    // calculate queue
+    // if store current queue = 0, create a first one
+    if (storeCurrentQueue == 0) {
+      session.log('No queue data, insert first queue');
+      queueNumber = 1;
+      // create queue
+      row = Queue(
         number: 1,
         storeId: storeId,
         userInfoId: user!.userId,
-        createdAt: DateTime.now());
+        createdAt: DateTime.now(),
+      );
+    } else {
+      session.log('Already has queue, insert a new once');
+      // check a lastest queue number and plus 1
+      final lastestQueue = store.queues;
+      queueNumber = lastestQueue!.first.number + 1;
+      row = Queue(
+        number: queueNumber,
+        storeId: storeId,
+        userInfoId: user!.userId,
+        createdAt: DateTime.now(),
+      );
+    }
 
+    // insert queue
+    session.log('Insert queue');
     final queue = await Queue.db.insertRow(session, row);
 
     // post message to central message stream
-    session.messages.postMessage('store_${storeId}', queue);
+    session.messages.postMessage('store_$storeId', queue);
 
     return queue;
   }
 
   // stream queue
   Stream streamQueue(Session session, int storeId) async* {
+    // get store queue
+
+    // send list queue
+
+    // send updated queue
     yield '';
+  }
+
+  // reset queue
+  Future<Store> resetQueue(Session session, int storeId) async {
+    // find store
+    final store = await Store.db.findById(session, storeId);
+    // reset queue
+    store!.currentQueue = 0;
+    // update store queue
+    final result = await Store.db.updateRow(session, store);
+    return result;
   }
 }

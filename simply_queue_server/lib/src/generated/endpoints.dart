@@ -13,8 +13,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/example_endpoint.dart' as _i2;
 import '../endpoints/queue_endpoint.dart' as _i3;
 import '../endpoints/store_endpoint.dart' as _i4;
-import 'package:simply_queue_server/src/generated/store.dart' as _i5;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i6;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i5;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -85,6 +84,24 @@ class Endpoints extends _i1.EndpointDispatch {
             params['storeId'],
           ),
         ),
+        'resetQueue': _i1.MethodConnector(
+          name: 'resetQueue',
+          params: {
+            'storeId': _i1.ParameterDescription(
+              name: 'storeId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['queue'] as _i3.QueueEndpoint).resetQueue(
+            session,
+            params['storeId'],
+          ),
+        ),
         'streamQueue': _i1.MethodStreamConnector(
           name: 'streamQueue',
           params: {
@@ -120,45 +137,9 @@ class Endpoints extends _i1.EndpointDispatch {
             Map<String, dynamic> params,
           ) async =>
               (endpoints['store'] as _i4.StoreEndpoint).getStores(session),
-        ),
-        'createStore': _i1.MethodConnector(
-          name: 'createStore',
-          params: {
-            'store': _i1.ParameterDescription(
-              name: 'store',
-              type: _i1.getType<_i5.Store>(),
-              nullable: false,
-            )
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['store'] as _i4.StoreEndpoint).createStore(
-            session,
-            params['store'],
-          ),
-        ),
-        'resetQueue': _i1.MethodConnector(
-          name: 'resetQueue',
-          params: {
-            'id': _i1.ParameterDescription(
-              name: 'id',
-              type: _i1.getType<int>(),
-              nullable: false,
-            )
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['store'] as _i4.StoreEndpoint).resetQueue(
-            session,
-            params['id'],
-          ),
-        ),
+        )
       },
     );
-    modules['serverpod_auth'] = _i6.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i5.Endpoints()..initializeEndpoints(server);
   }
 }

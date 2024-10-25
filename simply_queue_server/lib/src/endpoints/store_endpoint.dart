@@ -18,6 +18,9 @@ class StoreEndpoint extends Endpoint {
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
 
+  @override
+  bool get requireLogin => true;
+
   // get stores
   Future<List<Store>> getStores(Session session) async {
     return await Store.db.find(
@@ -25,22 +28,6 @@ class StoreEndpoint extends Endpoint {
       orderBy: (p) => p.createdAt,
       orderDescending: true,
     );
-  }
-
-  // create store
-  Future<Store> createStore(Session session, Store store) async {
-    return await Store.db.insertRow(session, store);
-  }
-
-  // reset queue
-  Future<Store> resetQueue(Session session, int id) async {
-    // find store
-    final store = await Store.db.findById(session, id);
-    // reset queue
-    store!.currentQueue = 0;
-    // update store queue
-    final result = await Store.db.updateRow(session, store);
-    return result;
   }
 }
 

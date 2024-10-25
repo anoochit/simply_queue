@@ -71,6 +71,7 @@ void run(List<String> args) async {
   // await initSampleData(pod);
 }
 
+// sendmail
 Future<bool> sendMail(
     Session session, String email, String subject, String body) async {
   // Retrieve the credentials
@@ -97,6 +98,7 @@ Future<bool> sendMail(
   }
 }
 
+// init sample data
 Future<void> initSampleData(Serverpod pod) async {
   final session = await pod.createSession();
   int storeId = 2;

@@ -51,6 +51,13 @@ class EndpointQueue extends _i1.EndpointRef {
         {'storeId': storeId},
         {},
       );
+
+  _i2.Future<_i4.Store> resetQueue(int storeId) =>
+      caller.callServerEndpoint<_i4.Store>(
+        'queue',
+        'resetQueue',
+        {'storeId': storeId},
+      );
 }
 
 /// {@category Endpoint}
@@ -65,20 +72,6 @@ class EndpointStore extends _i1.EndpointRef {
         'store',
         'getStores',
         {},
-      );
-
-  _i2.Future<_i4.Store> createStore(_i4.Store store) =>
-      caller.callServerEndpoint<_i4.Store>(
-        'store',
-        'createStore',
-        {'store': store},
-      );
-
-  _i2.Future<_i4.Store> resetQueue(int id) =>
-      caller.callServerEndpoint<_i4.Store>(
-        'store',
-        'resetQueue',
-        {'id': id},
       );
 }
 
