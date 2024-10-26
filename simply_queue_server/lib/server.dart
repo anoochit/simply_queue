@@ -101,40 +101,45 @@ Future<bool> sendMail(
 // init sample data
 Future<void> initSampleData(Serverpod pod) async {
   final session = await pod.createSession();
-  int storeId = 2;
+  int storeId = 1;
+  int userId = 2;
 
   // add sample user
   final totalUser = await auth.UserInfo.db.count(session);
   if (totalUser == 0) {
     session.log('No user! add sample user');
 
-    await auth.Emails.createUser(
-      session,
-      'customer',
-      'customer@example.com',
-      'Hello123!',
-    ).then((user) async {
-      await auth.Users.updateUserScopes(
+    for (int i = 0; i < 10; i++) {
+      await auth.Emails.createUser(
         session,
-        user!.id!,
-        {scope.UserScope.customer},
-      );
-      session.log('Add customer account');
-    });
+        'customer${i + 1}',
+        'customer${i + 1}@example.com',
+        'Hello123!',
+      ).then((user) async {
+        await auth.Users.updateUserScopes(
+          session,
+          user!.id!,
+          {scope.UserScope.customer},
+        );
+        session.log('Add customer account');
+      });
+    }
 
-    await auth.Emails.createUser(
-      session,
-      'store',
-      'store@example.com',
-      'Hello123!',
-    ).then((user) async {
-      await auth.Users.updateUserScopes(
+    for (int i = 0; i < 10; i++) {
+      await auth.Emails.createUser(
         session,
-        user!.id!,
-        {scope.UserScope.store},
-      );
-      session.log('Add store account');
-    });
+        'store${i + 1}',
+        'store${i + 1}@example.com',
+        'Hello123!',
+      ).then((user) async {
+        await auth.Users.updateUserScopes(
+          session,
+          user!.id!,
+          {scope.UserScope.store},
+        );
+        session.log('Add store account');
+      });
+    }
   }
 
   // add sample store
@@ -149,9 +154,24 @@ Future<void> initSampleData(Serverpod pod) async {
       image: 'https://picsum.photos/536/354',
       createdAt: DateTime.now(),
       currentQueue: 0,
-      userInfoId: storeId,
+      userInfoId: userId,
     );
 
     await Store.db.insertRow(session, store);
+  }
+
+  // add sample queue
+  final totalQueue = await Queue.db.count(session);
+  if (totalQueue == 0) {
+    for (int i = 0; i < 10; i++) {
+      final queue = Queue(
+        number: (i + 1),
+        userInfoId: (i + 2),
+        storeId: 1,
+        createdAt: DateTime.now(),
+      );
+
+      await Queue.db.insertRow(session, queue);
+    }
   }
 }

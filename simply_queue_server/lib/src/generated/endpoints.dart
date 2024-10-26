@@ -105,8 +105,8 @@ class Endpoints extends _i1.EndpointDispatch {
         'streamQueue': _i1.MethodStreamConnector(
           name: 'streamQueue',
           params: {
-            'storeId': _i1.ParameterDescription(
-              name: 'storeId',
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
               type: _i1.getType<int>(),
               nullable: false,
             )
@@ -120,7 +120,7 @@ class Endpoints extends _i1.EndpointDispatch {
           ) =>
               (endpoints['queue'] as _i3.QueueEndpoint).streamQueue(
             session,
-            params['storeId'],
+            params['userId'],
           ),
         ),
       },

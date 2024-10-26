@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
@@ -77,13 +79,42 @@ class QueueEndpoint extends Endpoint {
   }
 
   // stream queue
-  Stream streamQueue(Session session, int storeId) async* {
-    // get store queue
+  Stream streamQueue(Session session, int userId) async* {
+    // get store
+    final stores = await Store.db.find(
+      session,
+      where: (p) => p.userInfoId.equals(userId),
+    );
 
-    // send list queue
+    if (stores.isNotEmpty) {
+      final store = stores.first;
+      final storeId = store.id;
+      session.log('Queues for store = $storeId');
+      final queues = await Queue.db.find(
+        session,
+        where: (p) =>
+            p.status.inSet({Status.current, Status.wait}) &
+            p.storeId.equals(storeId),
+        orderBy: (p) => p.number,
+        orderDescending: false,
+      );
 
-    // send updated queue
-    yield '';
+      session.log('Queues for store = ${store.id}, lenght = ${queues.length}');
+      // send queue snapshot
+      yield QueueSnapshot(queues: queues);
+
+      // get queue stream message
+      var messageStream =
+          session.messages.createStream<Queue>('store_$storeId');
+      // send queue stream message
+      await for (var message in messageStream) {
+        yield message;
+      }
+    } else {
+      session.log('Not found store for user = ${userId} ');
+    }
+
+    yield null;
   }
 
   // reset queue

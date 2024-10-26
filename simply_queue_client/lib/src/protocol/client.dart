@@ -44,11 +44,11 @@ class EndpointQueue extends _i1.EndpointRef {
         {'storeId': storeId},
       );
 
-  _i2.Stream<dynamic> streamQueue(int storeId) =>
+  _i2.Stream<dynamic> streamQueue(int userId) =>
       caller.callStreamingServerEndpoint<_i2.Stream<dynamic>, dynamic>(
         'queue',
         'streamQueue',
-        {'storeId': storeId},
+        {'userId': userId},
         {},
       );
 
