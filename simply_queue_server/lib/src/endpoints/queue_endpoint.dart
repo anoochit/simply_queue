@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
@@ -111,7 +109,7 @@ class QueueEndpoint extends Endpoint {
         yield message;
       }
     } else {
-      session.log('Not found store for user = ${userId} ');
+      session.log('Not found store for user = $userId ');
     }
 
     yield null;
