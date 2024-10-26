@@ -166,8 +166,8 @@ Future<void> initSampleData(Serverpod pod) async {
     for (int i = 0; i < 10; i++) {
       final queue = Queue(
         number: (i + 1),
-        userInfoId: (i + 2),
-        storeId: 1,
+        userInfoId: (i + 1),
+        storeId: storeId,
         createdAt: DateTime.now(),
       );
 
