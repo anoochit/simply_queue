@@ -9,16 +9,18 @@ A universal queue management system.
  * [simply_queue_signage](/simply_queue_signage/) - signage app for android tv
 
 
- ## Screenshots
+## Schema
 
 ![](/screenshots/schema.png)
 
+## Screenshots
+
+
+
 | ![](/screenshots/signage01.png) |![](/screenshots/signage02.png)  |   
 |---|---| 
-|  |
+| ![](/screenshots/store01.png)  | |
+ | ![](/screenshots/customer01.png) |![](/screenshots/customer02.png)  | 
  
-
-| ![](/screenshots/store01.png) | ![](/screenshots/customer01.png) |![](/screenshots/customer02.png)  |   
-|---|---| ---|
-|  | |
+ 
 
