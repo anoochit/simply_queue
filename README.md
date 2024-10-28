@@ -19,7 +19,6 @@ A universal queue management system.
 |---|---| 
 |  |
 
-
 | ![](/screenshots/customer01.png) |![](/screenshots/customer02.png)  |   
 |---|---| 
 |  |
