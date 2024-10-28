@@ -38,7 +38,6 @@ Future<void> initServerPodClient() async {
       log('user already signed in ');
     } else {
       log('user signed out ');
-      Get.offAllNamed(Routes.SIGNIN);
     }
   });
 
