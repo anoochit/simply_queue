@@ -20,7 +20,8 @@ import 'status.dart' as _i7;
 import 'store.dart' as _i8;
 import 'user_scope.dart' as _i9;
 import 'protocol.dart' as _i10;
-import 'package:simply_queue_server/src/generated/store.dart' as _i11;
+import 'package:simply_queue_server/src/generated/queue.dart' as _i11;
+import 'package:simply_queue_server/src/generated/store.dart' as _i12;
 export 'example.dart';
 export 'queue.dart';
 export 'queue_snapshot.dart';
@@ -269,8 +270,17 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<_i10.Queue>(e)).toList()
           : null) as dynamic;
     }
-    if (t == List<_i11.Store>) {
-      return (data as List).map((e) => deserialize<_i11.Store>(e)).toList()
+    if (t == _i1.getType<List<_i11.Queue>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i11.Queue>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == List<_i11.Queue>) {
+      return (data as List).map((e) => deserialize<_i11.Queue>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i12.Store>) {
+      return (data as List).map((e) => deserialize<_i12.Store>(e)).toList()
           as dynamic;
     }
     try {

@@ -21,11 +21,10 @@ class QueueEndpoint extends Endpoint {
   @override
   bool get requireLogin => true;
 
-  // TODO : create queue
-  Future<Queue> createQueue(Session session, int storeId) async {
-    late Queue row;
-    late int queueNumber;
-    final user = await session.authenticated;
+  // create customer queue
+  Future<Queue?> createQueue(Session session, int storeId) async {
+    final auth = await session.authenticated;
+    final userId = auth!.userId;
 
     // check current queue and get latest queue
     final store = await Store.db.findById(
@@ -35,48 +34,59 @@ class QueueEndpoint extends Endpoint {
         queues: Queue.includeList(
           orderBy: (p) => p.number,
           orderDescending: true,
+          limit: 1,
         ),
       ),
     );
 
-    final storeCurrentQueue = store!.currentQueue;
+    // store exist, add new queue
+    if (store != null) {
+      final queues = store.queues;
+      if (queues!.isNotEmpty) {
+        // add queue
+        final lastQueue = queues.first;
+        final lastQueueNumber = lastQueue.number;
 
-    // calculate queue
-    // if store current queue = 0, create a first one
-    if (storeCurrentQueue == 0) {
-      session.log('No queue data, insert first queue');
-      queueNumber = 1;
-      // create queue
-      row = Queue(
-        number: 1,
-        storeId: storeId,
-        userInfoId: user!.userId,
-        createdAt: DateTime.now(),
-      );
-    } else {
-      session.log('Already has queue, insert a new once');
-      // check a lastest queue number and plus 1
-      final lastestQueue = store.queues;
-      queueNumber = lastestQueue!.first.number + 1;
-      row = Queue(
-        number: queueNumber,
-        storeId: storeId,
-        userInfoId: user!.userId,
-        createdAt: DateTime.now(),
-      );
+        final row = Queue(
+          number: (lastQueueNumber + 1),
+          userInfoId: userId,
+          storeId: storeId,
+          createdAt: DateTime.now(),
+        );
+
+        final result = await Queue.db.insertRow(session, row);
+
+        // post message to central message stream
+        session.messages.postMessage('store_$storeId', result);
+
+        // post message to central customer message stream
+        session.messages.postMessage('customer_$userId', result);
+
+        return result;
+      } else {
+        // add first queue
+        final row = Queue(
+          number: 1,
+          userInfoId: userId,
+          storeId: storeId,
+          createdAt: DateTime.now(),
+        );
+
+        final result = await Queue.db.insertRow(session, row);
+
+        // post message to central store message stream
+        session.messages.postMessage('store_$storeId', result);
+        // post message to central customer message stream
+        session.messages.postMessage('customer_$userId', result);
+
+        return result;
+      }
     }
 
-    // insert queue
-    session.log('Insert queue');
-    final queue = await Queue.db.insertRow(session, row);
-
-    // post message to central message stream
-    session.messages.postMessage('store_$storeId', queue);
-
-    return queue;
+    return null;
   }
 
-  // stream queue
+  // store stream queue
   Stream streamQueue(Session session, int userId) async* {
     // get store
     final stores = await Store.db.find(
@@ -115,14 +125,118 @@ class QueueEndpoint extends Endpoint {
     yield null;
   }
 
-  // reset queue
-  Future<Store> resetQueue(Session session, int storeId) async {
-    // find store
-    final store = await Store.db.findById(session, storeId);
-    // reset queue
-    store!.currentQueue = 0;
-    // update store queue
-    final result = await Store.db.updateRow(session, store);
+  // next first queue
+  Future<Queue> nextFirstQueue(Session session, Queue queue) async {
+    final row = queue;
+    final storeId = queue.storeId;
+    row.status = Status.current;
+    final result = await Queue.db.updateRow(session, row);
+
+    // post message to central store message stream
+    session.messages.postMessage('store_$storeId', result);
+    // post message to central customer message stream
+    session.messages.postMessage('customer_${result.userInfoId}', result);
+
     return result;
+  }
+
+  // next second is queue
+  Future<Queue> nextWaitQueue(
+      Session session, Queue currentQueue, Queue nextQueue) async {
+    final currentQueueRow = currentQueue;
+    final nextQueueRow = nextQueue;
+    final storeId = currentQueue.storeId;
+
+    currentQueueRow.status = Status.done;
+    nextQueueRow.status = Status.current;
+
+    // update current queue status
+    final currentQueueRowResult =
+        await Queue.db.updateRow(session, currentQueueRow);
+
+    // post message to central store message stream
+    session.messages.postMessage('store_$storeId', currentQueueRowResult);
+    // post message to central customer message stream
+    // session.messages.postMessage(
+    //     'customer_${currentQueueRowResult.userInfoId}', currentQueueRowResult);
+
+    // update next queue status
+    final nextQueueResult = await Queue.db.updateRow(session, nextQueueRow);
+
+    // post message to central store message stream
+    session.messages.postMessage('store_$storeId', nextQueueResult);
+    // post message to central customer message stream
+    session.messages
+        .postMessage('customer_${nextQueueResult.userInfoId}', nextQueueResult);
+
+    return nextQueueResult;
+  }
+
+  // get store queue snapshot
+  Future<List<Queue>?> queueSnapshot(Session session, int userId) async {
+    // get store
+    final stores = await Store.db.find(
+      session,
+      where: (p) => p.userInfoId.equals(userId),
+    );
+
+    if (stores.isNotEmpty) {
+      final store = stores.first;
+      final storeId = store.id;
+      session.log('Queues for store = $storeId');
+      final queues = await Queue.db.find(
+        session,
+        where: (p) =>
+            p.status.inSet({Status.current, Status.wait}) &
+            p.storeId.equals(storeId),
+        orderBy: (p) => p.number,
+        orderDescending: false,
+        limit: 10,
+      );
+
+      return queues;
+    } else {
+      return null;
+    }
+  }
+
+  // customer queue subscription
+  Stream customerStreamQueue(Session session, int userId) async* {
+    // find customer queue
+    final queues = await Queue.db.find(
+      session,
+      include: Queue.include(store: Store.include()),
+      where: (p) => p.status.inSet({Status.current, Status.wait}),
+      orderBy: (p) => p.number,
+      orderDescending: false,
+    );
+
+    // send snapshot stream
+    final snapshotStreamQueue = QueueSnapshot(queues: queues);
+    yield snapshotStreamQueue;
+
+    // get queue stream message
+    var messageStream =
+        session.messages.createStream<Queue>('customer_$userId');
+    // send queue stream message
+    await for (var message in messageStream) {
+      yield message;
+    }
+  }
+
+  // get customer queue snapshot
+  Future<List<Queue>> customerQueueSnapshot(Session session, int userId) async {
+    final queues = await Queue.db.find(
+      session,
+      include: Queue.include(store: Store.include()),
+      where: (p) =>
+          p.status.inSet({Status.current, Status.wait}) &
+          p.userInfoId.equals(userId),
+      orderBy: (p) => p.number,
+      orderDescending: false,
+      limit: 10,
+    );
+
+    return queues;
   }
 }

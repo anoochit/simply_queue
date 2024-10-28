@@ -5,3 +5,4 @@ values:
   - wait
   - reject
   - cancel
+  - done

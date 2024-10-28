@@ -37,8 +37,8 @@ class EndpointQueue extends _i1.EndpointRef {
   @override
   String get name => 'queue';
 
-  _i2.Future<_i3.Queue> createQueue(int storeId) =>
-      caller.callServerEndpoint<_i3.Queue>(
+  _i2.Future<_i3.Queue?> createQueue(int storeId) =>
+      caller.callServerEndpoint<_i3.Queue?>(
         'queue',
         'createQueue',
         {'storeId': storeId},
@@ -52,11 +52,46 @@ class EndpointQueue extends _i1.EndpointRef {
         {},
       );
 
-  _i2.Future<_i4.Store> resetQueue(int storeId) =>
-      caller.callServerEndpoint<_i4.Store>(
+  _i2.Future<_i3.Queue> nextFirstQueue(_i3.Queue queue) =>
+      caller.callServerEndpoint<_i3.Queue>(
         'queue',
-        'resetQueue',
-        {'storeId': storeId},
+        'nextFirstQueue',
+        {'queue': queue},
+      );
+
+  _i2.Future<_i3.Queue> nextWaitQueue(
+    _i3.Queue currentQueue,
+    _i3.Queue nextQueue,
+  ) =>
+      caller.callServerEndpoint<_i3.Queue>(
+        'queue',
+        'nextWaitQueue',
+        {
+          'currentQueue': currentQueue,
+          'nextQueue': nextQueue,
+        },
+      );
+
+  _i2.Future<List<_i3.Queue>?> queueSnapshot(int userId) =>
+      caller.callServerEndpoint<List<_i3.Queue>?>(
+        'queue',
+        'queueSnapshot',
+        {'userId': userId},
+      );
+
+  _i2.Stream<dynamic> customerStreamQueue(int userId) =>
+      caller.callStreamingServerEndpoint<_i2.Stream<dynamic>, dynamic>(
+        'queue',
+        'customerStreamQueue',
+        {'userId': userId},
+        {},
+      );
+
+  _i2.Future<List<_i3.Queue>> customerQueueSnapshot(int userId) =>
+      caller.callServerEndpoint<List<_i3.Queue>>(
+        'queue',
+        'customerQueueSnapshot',
+        {'userId': userId},
       );
 }
 

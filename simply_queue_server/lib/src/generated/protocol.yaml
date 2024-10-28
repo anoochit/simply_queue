@@ -3,6 +3,10 @@ example:
 queue:
   - createQueue:
   - streamQueue:
-  - resetQueue:
+  - nextFirstQueue:
+  - nextWaitQueue:
+  - queueSnapshot:
+  - customerStreamQueue:
+  - customerQueueSnapshot:
 store:
   - getStores:

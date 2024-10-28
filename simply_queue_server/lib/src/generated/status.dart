@@ -15,7 +15,8 @@ enum Status implements _i1.SerializableModel {
   current,
   wait,
   reject,
-  cancel;
+  cancel,
+  done;
 
   static Status fromJson(String name) {
     switch (name) {
@@ -27,6 +28,8 @@ enum Status implements _i1.SerializableModel {
         return reject;
       case 'cancel':
         return cancel;
+      case 'done':
+        return done;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "Status"');
     }
