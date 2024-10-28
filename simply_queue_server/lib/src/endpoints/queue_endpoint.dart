@@ -206,7 +206,9 @@ class QueueEndpoint extends Endpoint {
     final queues = await Queue.db.find(
       session,
       include: Queue.include(store: Store.include()),
-      where: (p) => p.status.inSet({Status.current, Status.wait}),
+      where: (p) =>
+          p.status.inSet({Status.current, Status.wait}) &
+          p.userInfoId.equals(userId),
       orderBy: (p) => p.number,
       orderDescending: false,
     );
