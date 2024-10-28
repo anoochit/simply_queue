@@ -16,14 +16,14 @@ class HomeView extends GetView<HomeController> {
       child: Flex(
         direction: Axis.horizontal,
         children: [
-          // TODO : current queue
+          // current queue
           showCurrentQueue(context),
 
           const VerticalDivider(
             thickness: 2.0,
           ),
 
-          // TODO : waiting list
+          // waiting list
           showWaitingList(context)
         ],
       ),
@@ -60,7 +60,7 @@ class HomeView extends GetView<HomeController> {
                   if (queueStatus != Status.current) {
                     return ListTile(
                       title: Text(
-                        '$queuePrefix${queueNumber}',
+                        '$queuePrefix$queueNumber',
                         style: Theme.of(context).textTheme.displayLarge!.apply(
                               color: Colors.grey.shade500,
                               fontWeightDelta: 3,
@@ -68,7 +68,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                     );
                   } else {
-                    return SizedBox();
+                    return const SizedBox();
                   }
                 },
               ),
@@ -85,7 +85,7 @@ class HomeView extends GetView<HomeController> {
       flex: 2,
       child: Obx(
         () {
-          if (controller.listQueue.length > 0) {
+          if (controller.listQueue.isNotEmpty) {
             final queue = controller.listQueue.first;
 
             if (queue.status == Status.current) {

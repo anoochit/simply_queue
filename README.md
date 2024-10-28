@@ -11,15 +11,14 @@ A universal queue management system.
 
  ## Screenshots
 
+![](/screenshots/schema.png)
+
 | ![](/screenshots/signage01.png) |![](/screenshots/signage02.png)  |   
 |---|---| 
 |  |
+ 
 
-| ![](/screenshots/store01.png) |   |   
-|---|---| 
-|  |
-
-| ![](/screenshots/customer01.png) |![](/screenshots/customer02.png)  |   
-|---|---| 
-|  |
+| ![](/screenshots/store01.png) | ![](/screenshots/customer01.png) |![](/screenshots/customer02.png)  |   
+|---|---| ---|
+|  | |
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:simply_queue_client/simply_queue_client.dart';
 import 'package:simply_queue_signage/serverpod.dart';
@@ -21,14 +22,14 @@ class HomeController extends GetxController {
     subscription = stream.listen((update) async {
       // get snapshot
       if (update is QueueSnapshot) {
-        print('get snapshot queue');
+        log('get snapshot queue');
         listQueue.value = update.queues;
         listQueue.refresh();
       }
 
       // get update stream
       if (update is Queue) {
-        print('get update queue');
+        log('get update queue');
         await reloadQueueSnapshot();
       }
     });
