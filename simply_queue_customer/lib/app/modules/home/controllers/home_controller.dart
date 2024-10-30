@@ -40,13 +40,13 @@ class HomeController extends GetxController {
         client.queue.customerStreamQueue(sessionManager.signedInUser!.id!);
 
     stream.listen((update) async {
-      // update queue snapshot
+      // get queue snapshot
       if (update is QueueSnapshot) {
         log('get customer queue snapshot');
         listQueue.value = update.queues;
         notifyQueued();
       }
-
+      // get update queue
       if (update is Queue) {
         log('get customer update queue');
         await reloadSnapshot();

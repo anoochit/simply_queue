@@ -45,13 +45,13 @@ class HomeController extends GetxController {
   streamQueue({required int storeId}) async {
     try {
       subscribe = client.queue.streamQueue(storeId).listen((update) {
-        // update list queue with snapshot data
+        // get queue snapshot
         if (update is QueueSnapshot) {
           log('get queue snapshot');
           listQueue.value = update.queues;
         }
 
-        // update list queue item with update data
+        // get update queue
         if (update is Queue) {
           log('get queue update, reload snapshots');
           // refresh data
